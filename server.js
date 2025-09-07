@@ -1,13 +1,13 @@
 const app = require('./app');
 const dotenv = require('dotenv');
-const db = require('./src/config/db');
+const db = require('./BackEnd/src/config/db');
 
 require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
 
 
-const pool = require('./src/config/db');
+const pool = require('./BackEnd/src/config/db');
 
 async function testDb() {
   try {

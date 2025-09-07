@@ -59,7 +59,7 @@ exports.findById = async (emp_id) => {
 
 
 exports.deleteEmployee = async (emp_id) => {
-  const sql = `DELETE FROM comp_employee WHERE emp_id = ?`;
+  const sql = `UPDATE comp_employee SET is_deleted = 1 WHERE emp_id = ?`;
   const [result] = await db.execute(sql, [emp_id]);
   return result.affectedRows > 0;
 };

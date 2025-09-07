@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
 
+
 function auth(requiredRoles = []) {
   return (req, res, next) => {
+    
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -12,6 +14,7 @@ function auth(requiredRoles = []) {
 
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("🔑 Decoded JWT:", decoded);
       req.user = decoded;
 
       

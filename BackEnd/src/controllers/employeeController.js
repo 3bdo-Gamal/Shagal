@@ -3,11 +3,7 @@ const db = require('../config/db');
 const bcrypt = require('bcrypt');
 
 
-const verifyCompanyPassword = async (compId, password) => {
-  const [rows] = await db.execute(`SELECT comp_password FROM companies WHERE comp_id = ?`, [compId]);
-  if (rows.length === 0) return false;
-  return bcrypt.compare(password, rows[0].comp_password);
-};
+
 
 
 const addEmployee = async (req, res, next) => {

@@ -15,10 +15,10 @@ const pool = mysql.createPool({
 
 
 //display tables from the db in the term
-/*
-(async () => {
+
+/*(async () => {
   try {
-    const [rows] = await pool.query('SELECT * FROM admin '); 
+    const [rows] = await pool.query('SELECT * FROM student '); 
     console.table(rows); 
   } catch (err) {
     console.error('Database query error:', err);

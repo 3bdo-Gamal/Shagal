@@ -2,13 +2,12 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
-const errorMiddleware = require('./src/middlewares/errorMiddleware');
-const authRoutes = require('./src/routes/authRoutes');
-const companyRoutes = require('./src/routes/compRoutes');
-const employeeRoutes = require('./src/routes/employeeRoutes');
-const jobRoutes = require('./src/routes/jobRoutes');
-const studentExp =  require('./src/routes/studentExperienceRoutes');
-const student = require('./src/routes/studentRoutes');
+const errorMiddleware = require('./BackEnd/src/middlewares/errorMiddleware');
+const authRoutes = require('./BackEnd/src/routes/authRoutes');
+const employee = require('./BackEnd/src/routes/employeeRoutes');
+const jobRoutes = require('./BackEnd/src/routes/jobRoutes');
+const users = require('./BackEnd/src/routes/userRoutes');
+const stuExp = require('./BackEnd/src/routes/studentExperienceRoutes');
 
 const app = express();
 
@@ -28,11 +27,11 @@ app.use((req, res, next) => {
 
 
 app.use('/api/auth', authRoutes);
-app.use('/api/employees', employeeRoutes);
 app.use('/api/jobs', jobRoutes);
-app.use('/api/student-experience', studentExp);
-app.use('/api/company', companyRoutes);
-app.use('/api/students', student);
+app.use('/api/user', users);
+app.use('/api/employee', employee);
+app.use('/api/stuExp', stuExp);
+
 
 
 
