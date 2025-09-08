@@ -1,10 +1,6 @@
 const EmployeeModel = require('../models/employeeModel');
-const db = require('../config/db');
-const bcrypt = require('bcrypt');
-
-
-
-
+const pool = require('../config/db');
+const verifyPassword = require("../utils/checkPassword");
 
 const addEmployee = async (req, res, next) => {
   try {
@@ -31,20 +27,14 @@ const addEmployee = async (req, res, next) => {
 
 const updateEmployee = async (req, res, next) => {
   try {
-    const empId = req.params.id;
+    const { currentPassword, ...updateData } = req.body; 
     const compId = req.user.comp_id;
-    const { companyPassword, ...updateData } = req.body;
 
-    if (!companyPassword) {
-      return res.status(400).json({ error: 'Company password is required for update' });
-    }
+    await verifyPassword(pool, "companies", "comp_id", compId, currentPassword);
 
-    const valid = await verifyCompanyPassword(compId, companyPassword);
-    if (!valid) {
-      return res.status(401).json({ error: 'Invalid company password' });
-    }
-
+    const empId = req.params.id;
     const employee = await EmployeeModel.findById(empId);
+
     if (!employee || employee.comp_id !== compId) {
       return res.status(404).json({ error: 'Employee not found' });
     }
@@ -54,30 +44,24 @@ const updateEmployee = async (req, res, next) => {
       return res.status(400).json({ error: 'No fields to update' });
     }
 
-    const fresh = await EmployeeModel.findById(empId);
-    res.json({ message: 'Employee updated successfully', employee: fresh });
+    
+    res.json({ message: 'Employee updated successfully' });
+
   } catch (error) {
     next(error);
   }
 };
 
-
 const deleteEmployee = async (req, res, next) => {
   try {
-    const empId = req.params.id;
+    const { currentPassword } = req.body;
     const compId = req.user.comp_id;
-    const { companyPassword } = req.body;
 
-    if (!companyPassword) {
-      return res.status(400).json({ error: 'Company password is required for delete' });
-    }
+    await verifyPassword(pool, "companies", "comp_id", compId, currentPassword);
 
-    const valid = await verifyCompanyPassword(compId, companyPassword);
-    if (!valid) {
-      return res.status(401).json({ error: 'Invalid company password' });
-    }
-
+    const empId = req.params.id;
     const employee = await EmployeeModel.findById(empId);
+
     if (!employee || employee.comp_id !== compId) {
       return res.status(404).json({ error: 'Employee not found' });
     }
@@ -87,7 +71,7 @@ const deleteEmployee = async (req, res, next) => {
       return res.status(500).json({ error: 'Failed to delete employee' });
     }
 
-    res.json({ message: 'Employee deleted successfully', employeeId: empId });
+    res.json({ message: 'Employee deleted successfully' });
   } catch (error) {
     next(error);
   }
@@ -104,4 +88,23 @@ const getEmployees = async (req, res, next) => {
   }
 };
 
-module.exports = { addEmployee, updateEmployee, deleteEmployee, getEmployees };
+const getEmployeeById = async (req, res, next) => {
+  try {
+    const compId = req.user.comp_id;   
+    const empId = req.params.id;      
+
+    const employee = await EmployeeModel.findById(empId);
+
+   
+    if (!employee || employee.comp_id !== compId || employee.isDeleted === 1) {
+      return res.status(404).json({ error: "Employee not found" });
+    }
+
+    res.json(employee);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+module.exports = { addEmployee, updateEmployee, deleteEmployee, getEmployees, getEmployeeById };

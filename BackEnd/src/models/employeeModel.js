@@ -17,7 +17,8 @@ exports.addEmployee = async (employeeData) => {
 
 
 exports.getEmployeesByCompany = async (comp_id) => {
-  const sql = `SELECT * FROM comp_employee WHERE comp_id = ?`;
+  
+  const sql = `SELECT * FROM comp_employee WHERE comp_id = ? and is_deleted = 0`;
   const [rows] = await db.execute(sql, [comp_id]);
   return rows;
 };
@@ -52,7 +53,7 @@ exports.updateEmployee = async (emp_id, updateData) => {
 
 
 exports.findById = async (emp_id) => {
-  const sql = `SELECT * FROM comp_employee WHERE emp_id = ? LIMIT 1`;
+  const sql = `SELECT * FROM comp_employee WHERE emp_id = ? and is_deleted = 0 LIMIT 1 `;
   const [rows] = await db.execute(sql, [emp_id]);
   return rows[0];
 };
