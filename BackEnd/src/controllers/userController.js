@@ -59,7 +59,7 @@ exports.deleteCompany = async (req, res, next) => {
 exports.getStudentProfile = async (req, res, next) => {
   
   try {
-    console.log('🚀 getStudentProfile started');
+    
     const student = await userModel.findStuById(req.user.stu_id);
     if (!student) {
       return res.status(404).json({ error: "Student not found" });

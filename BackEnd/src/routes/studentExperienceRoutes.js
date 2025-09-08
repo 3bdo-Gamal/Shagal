@@ -5,8 +5,8 @@ const studentExperienceController = require('../controllers/studentExperienceCon
 
 
 router.post('/', auth(['student']), studentExperienceController.addExperience);
-
-
+router.get('/', auth(['student']), studentExperienceController.getExperiences);
+router.put('/:id', auth(['student']), studentExperienceController.updateExperience);
 router.delete('/:id', auth(['student']), studentExperienceController.deleteExperience);
 
 module.exports = router;
