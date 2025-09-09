@@ -1,6 +1,35 @@
 const pool = require('../config/db');
 const bcrypt = require('bcrypt');
 
+// add function to use by admins 
+exports.addCompany = async (data) => {
+  const { name, address, comp_type, comp_genre, commercial_register, email, password } = data;
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  const [result] = await pool.execute(
+    `INSERT INTO companies (comp_name, comp_address, comp_type, comp_genre, commercial_register, email, password, is_deleted)
+     VALUES (?, ?, ?, ?, ?, ?, ?, 0)`,
+    [name, address, comp_type, comp_genre, commercial_register, email, hashedPassword]
+  );
+
+  return result.insertId;
+};
+
+exports.addStudent = async (data) => {
+  const { name, age, address, num, national_id, email, password, linkedin, behance } = data;
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  const [result] = await pool.execute(
+    `INSERT INTO student (stu_name, stu_age, stu_address, stu_num, national_id, email, password, linkedin, behance, is_deleted)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)`,
+    [name, age, address, num, national_id, email, hashedPassword, linkedin, behance]
+  );
+
+  return result.insertId;
+};
+
+
+
 // Company model to edit the user from the end user 
 exports.updateComp = async (id, updateData) => {
     const fields = [];
@@ -66,6 +95,15 @@ exports.findCompById = async (comp_id) => {
   return rows[0] || null;
 };
 
+exports.getAllCompanies = async () => {
+  const [rows] = await pool.execute(
+    `SELECT comp_id, comp_name, comp_address, comp_type, comp_genre,
+            commercial_register, email
+     FROM companies
+     WHERE is_deleted = 0`
+  );
+  return rows;
+};
 
 // Student  model to edit the user from the end user 
 exports.updateStudent = async (stu_id, updateData) => {
@@ -132,4 +170,14 @@ exports.findStuById = async (stu_id) => {
     [stu_id]
   );
   return rows[0] || null;
+};
+
+exports.getAllStudents = async () => {
+  const [rows] = await pool.execute(
+    `SELECT stu_id, stu_name, stu_age, stu_address, stu_num, national_id, 
+            email, linkedin, behance
+     FROM student
+     WHERE is_deleted = 0`
+  );
+  return rows;
 };

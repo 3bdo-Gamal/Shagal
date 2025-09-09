@@ -76,9 +76,9 @@ async function login(req, res, next) {
 if (type === 'admin') {
   tokenPayload = { id: user[idField], role: user.ad_role };
 } else if (type === 'company') {
-  tokenPayload = { comp_id: user.comp_id, role: 'company' };
+  tokenPayload = { comp_id: user.comp_id, role: 'comp' };
 } else {
-  tokenPayload = { stu_id: user.stu_id, role: 'student' };
+  tokenPayload = { stu_id: user.stu_id, role: 'stu' };
 }
 
     const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1d' });

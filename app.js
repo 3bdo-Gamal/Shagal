@@ -8,6 +8,7 @@ const employee = require('./BackEnd/src/routes/employeeRoutes');
 const jobRoutes = require('./BackEnd/src/routes/jobRoutes');
 const users = require('./BackEnd/src/routes/userRoutes');
 const stuExp = require('./BackEnd/src/routes/studentExperienceRoutes');
+const adminRoutes = require("./BackEnd/src/routes/adminRoutes");
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/user', users);
 app.use('/api/employee', employee);
 app.use('/api/stuExp', stuExp);
+app.use("/api/admin", adminRoutes);
 
 
 
