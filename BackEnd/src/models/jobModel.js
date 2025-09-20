@@ -73,7 +73,7 @@ exports.updateJob = async (job_id, updateData) => {
 
 
 exports.deleteJob = async (job_id) => {
-  const sql = `DELETE FROM comp_jobs WHERE job_id = ?`;
+  const sql = `UPDATE comp_jobs SET is_deleted = 1 WHERE job_id = ?`;
   const [result] = await db.execute(sql, [job_id]);
   return result.affectedRows > 0;
 };
