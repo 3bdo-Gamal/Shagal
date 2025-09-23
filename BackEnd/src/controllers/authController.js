@@ -33,61 +33,69 @@ async function register(req, res, next) {
   }
 }
 
+
 async function login(req, res, next) {
-  const { email, password, type } = req.body;
+  const { email, password } = req.body;
 
   try {
-    let table, idField, role;
+    let user = null;
+    let role = null;
 
-    if (type === 'student') {
-      table = 'student';
-      idField = 'stu_id';
-      role = 'student';
-    } else if (type === 'company') {
-      table = 'companies';
-      idField = 'comp_id';
-      role = 'company';
-    } else if (type === 'admin') {
-      table = 'admin'; 
-      idField = 'admin_id';
-    } else {
-      return res.status(400).json({ error: 'Invalid type' });
-    }
-
-    const [rows] = await pool.execute(
-      `SELECT * FROM ${table} WHERE email = ? LIMIT 1`,
+    
+    const [stuRows] = await pool.execute(
+      "SELECT stu_id AS id, password FROM student WHERE email = ? LIMIT 1",
       [email]
     );
+    if (stuRows.length > 0) {
+      user = stuRows[0];
+      role = 'student';
+    }
 
-    if (rows.length === 0) {
+    
+    if (!user) {
+      const [compRows] = await pool.execute(
+        "SELECT comp_id AS id, password FROM companies WHERE email = ? LIMIT 1",
+        [email]
+      );
+      if (compRows.length > 0) {
+        user = compRows[0];
+        role = 'company';
+      }
+    }
+
+    
+    if (!user) {
+      const [adminRows] = await pool.execute(
+        "SELECT admin_id AS id, ad_role AS role, password FROM admin WHERE email = ? LIMIT 1",
+        [email]
+      );
+      if (adminRows.length > 0) {
+        user = adminRows[0];
+        role = user.role || 'admin'; 
+      }
+    }
+
+   
+    if (!user) {
       return res.status(400).json({ error: 'Invalid email or password' });
     }
 
-    const user = rows[0];
-
+   
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ error: 'Invalid email or password' });
     }
 
-
-    let tokenPayload;
     
-if (type === 'admin') {
-  tokenPayload = { id: user[idField], role: user.ad_role };
-} else if (type === 'company') {
-  tokenPayload = { comp_id: user.comp_id, role: 'comp' };
-} else {
-  tokenPayload = { stu_id: user.stu_id, role: 'stu' };
-}
+    const tokenPayload = { id: user.id, role };
 
+    
     const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-    res.json({ message: 'Login successful', token, role: tokenPayload.role });
+    return res.json({ message: 'Login successful', token, role });
 
   } catch (err) {
     next(err);
   }
 }
-
 module.exports = { register, login };
