@@ -33,69 +33,79 @@ async function register(req, res, next) {
   }
 }
 
-
 async function login(req, res, next) {
   const { email, password } = req.body;
 
   try {
     let user = null;
-    let role = null;
+    let userRole = null;
 
     
     const [stuRows] = await pool.execute(
-      "SELECT stu_id AS id, password FROM student WHERE email = ? LIMIT 1",
+      "SELECT stu_id AS id, email, password FROM student WHERE email = ? LIMIT 1",
       [email]
     );
     if (stuRows.length > 0) {
       user = stuRows[0];
-      role = 'student';
+      userRole = "student";
     }
 
-    
+   
     if (!user) {
       const [compRows] = await pool.execute(
-        "SELECT comp_id AS id, password FROM companies WHERE email = ? LIMIT 1",
+        "SELECT comp_id AS id, email, password FROM companies WHERE email = ? LIMIT 1",
         [email]
       );
       if (compRows.length > 0) {
         user = compRows[0];
-        role = 'company';
-      }
-    }
-
-    
-    if (!user) {
-      const [adminRows] = await pool.execute(
-        "SELECT admin_id AS id, ad_role AS role, password FROM admin WHERE email = ? LIMIT 1",
-        [email]
-      );
-      if (adminRows.length > 0) {
-        user = adminRows[0];
-        role = user.role || 'admin'; 
+        userRole = "company";
       }
     }
 
    
     if (!user) {
-      return res.status(400).json({ error: 'Invalid email or password' });
+      const [adminRows] = await pool.execute(
+        "SELECT admin_id AS id, email, ad_role AS role, password FROM admin WHERE email = ? LIMIT 1",
+        [email]
+      );
+      if (adminRows.length > 0) {
+        user = adminRows[0];
+        userRole = user.role || "admin"; // high / admin
+      }
+    }
+
+    
+    if (!user) {
+      return res.status(400).json({ error: "Invalid email or password" });
     }
 
    
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ error: 'Invalid email or password' });
+      return res.status(400).json({ error: "Invalid email or password" });
     }
 
-    
-    const tokenPayload = { id: user.id, role };
+   
+    const tokenPayload = {
+      id: user.id,
+      role: userRole,
+      email: user.email
+    };
 
     
-    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-    return res.json({ message: 'Login successful', token, role });
+    return res.json({
+      message: "Login successful",
+      token,
+      role: userRole
+    });
 
   } catch (err) {
+    console.error("❌ Login error:", err);
     next(err);
   }
 }
+
+
 module.exports = { register, login };

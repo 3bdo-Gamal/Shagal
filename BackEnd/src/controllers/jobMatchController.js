@@ -4,13 +4,14 @@ const JobMatch = require('../models/jobMatchModel');
 exports.createMatch = async (req, res) => {
   try {
     const { job_id, stu_id } = req.body;
-    const admin_id = req.user.admin_id; // comes from authMiddleware
+    const admin_id = req.user.id; 
 
     const result = await JobMatch.createMatch(job_id, stu_id, admin_id);
     res.status(201).json({ message: 'Match created successfully', result });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
+    
   }
 };
 
