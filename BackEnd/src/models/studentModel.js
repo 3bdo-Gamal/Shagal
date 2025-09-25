@@ -55,7 +55,7 @@ exports.updateStudent = async (stu_id, updateData) => {
 
 
 exports.deleteStudent = async (stu_id) => {
-  const sql = `DELETE FROM student WHERE stu_id = ?`;
+  const sql = `UPDATE student SET is_deleted = 1 WHERE stu_id = ?`;
   const [result] = await db.execute(sql, [stu_id]);
   return result.affectedRows > 0;
 };
