@@ -12,12 +12,33 @@ const adminRoutes = require("./BackEnd/src/routes/adminRoutes");
 
 const app = express();
 
+
 app.use(express.json());
-
-
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_URL || '*' }));
+
+
+const allowedOrigins = [
+  process.env.CLIENT_URL 
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+
+
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+
 
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
@@ -34,15 +55,9 @@ app.use('/api/employee', employee);
 app.use('/api/stuExp', stuExp);
 app.use("/api/admin", adminRoutes);
 
-
-
-
-
 app.get("/", (req, res) => {
   res.send("🚀 API is running. Try /api/auth/login or /api/auth/register");
 });
-
-
 
 
 app.use((req, res) => {

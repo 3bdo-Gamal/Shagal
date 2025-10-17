@@ -4,7 +4,7 @@ const db = require('./BackEnd/src/config/db');
 
 require('dotenv').config();
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 
 const pool = require('./BackEnd/src/config/db');
