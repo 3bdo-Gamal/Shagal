@@ -1,5 +1,5 @@
 const experienceModel = require('../models/studentExperienceModel');
-const verifyPassword = require("../utils/checkPassword");
+
 const pool = require("../config/db");
 
 
@@ -43,9 +43,9 @@ exports.getExperiences = async (req, res, next) => {
 
 exports.updateExperience = async (req, res, next) => {
   try {
-    const { currentPassword } = req.body;
+    
     const id = req.user.stu_id;
-    await verifyPassword(pool, "student", "stu_id", id, currentPassword);
+    
     const exp_id = req.params.id;
     const updateData = req.body;
 
@@ -68,9 +68,9 @@ exports.updateExperience = async (req, res, next) => {
 
 exports.deleteExperience = async (req, res, next) => {
   try {
-    const { currentPassword } = req.body;
+   
     const id = req.user.stu_id;
-    await verifyPassword(pool, "student", "stu_id", id, currentPassword);
+    
     const exp_id = req.params.id;
    
 

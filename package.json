@@ -1,7 +1,7 @@
 {
   "name": "back-end",
   "version": "1.0.0",
-  "description": "",
+  "description": "This project is a B2B2C \r made for Edge Eduction company",
   "main": "app.js",
   "scripts": {
     "start": "node ./server.js",
@@ -22,5 +22,13 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/3bdo-Gamal/Shagal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/3bdo-Gamal/Shagal/issues"
+  },
+  "homepage": "https://github.com/3bdo-Gamal/Shagal#readme"
 }

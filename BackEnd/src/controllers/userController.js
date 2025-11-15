@@ -1,6 +1,5 @@
 const userModel = require("../models/userModel"); 
 const pool = require("../config/db");
-const verifyPassword = require("../utils/checkPassword");
 const authMiddleware = require("../middlewares/authMiddleware");
 
 //Company
@@ -21,9 +20,9 @@ exports.getCompanyProfile = async (req, res, next) => {
 exports.updateCompany = async (req, res, next) => {
   try {
     
-    const { currentPassword } = req.body;
+    
     const id = req.user.comp_id;
-    await verifyPassword(pool, "companies", "comp_id", id, currentPassword);
+    
 
     
     const success = await userModel.updateComp(id, req.body);
@@ -40,9 +39,9 @@ exports.updateCompany = async (req, res, next) => {
 exports.deleteCompany = async (req, res, next) => {
   try {
     
-    const { currentPassword } = req.body;
+    
     const id = req.user.comp_id;
-    await verifyPassword(pool, "companies", "comp_id", id, currentPassword);
+    
 
     const success = await userModel.deleteComp(id);
     if (!success) {
@@ -73,9 +72,9 @@ exports.getStudentProfile = async (req, res, next) => {
 exports.updateStudent = async (req, res, next) => {
   try {
     
-    const { currentPassword } = req.body;
+    
     const id = req.user.stu_id;
-    await verifyPassword(pool, "student", "stu_id", id, currentPassword);
+    
 
     const success = await userModel.updateStudent(id, req.body);
     if (!success) {
@@ -91,9 +90,9 @@ exports.updateStudent = async (req, res, next) => {
 exports.deleteStudent = async (req, res, next) => {
   try {
     
-    const { currentPassword } = req.body;
+    
     const id = req.user.stu_id;
-    await verifyPassword(pool, "student", "stu_id", id, currentPassword);
+    
 
     const success = await userModel.deleteStudent(id);
     if (!success) {
