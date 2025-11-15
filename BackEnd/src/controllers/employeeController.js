@@ -1,6 +1,5 @@
 const EmployeeModel = require('../models/employeeModel');
 const pool = require('../config/db');
-const verifyPassword = require("../utils/checkPassword");
 
 const addEmployee = async (req, res, next) => {
   try {
