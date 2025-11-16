@@ -85,3 +85,20 @@ exports.deleteExperience = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getExperienceById = async (req, res, next) => {
+  try {
+    const id = req.user.id;
+    const exp_id = req.params.id;
+
+    const experience = await experienceModel.findByIdAndStudent(exp_id, id);
+
+    if (!experience) {
+      return res.status(404).json({ error: 'Experience not found or not yours' });
+    }
+    return res.status(200).json({ experience });
+
+  } catch (err) {
+    next(err);
+  }
+};
