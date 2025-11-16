@@ -8,7 +8,7 @@ exports.createJob = async (req, res, next) => {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
-    const compId = req.user.comp_id;
+    const compId = req.user.id;
 
     const jobId = await Job.create(job_title, job_type, numberNeeded, compId);
 
@@ -36,7 +36,7 @@ exports.getJobs = async (req, res, next) => {
   exports.updateJob = async (req, res, next) => {
     try {
       const jobId = req.params.id;
-      const compId = req.user.comp_id; 
+      const compId = req.user.id; 
       const updateData = req.body;
 
       if (Object.keys(updateData).length === 0) {
@@ -68,7 +68,7 @@ exports.getJobs = async (req, res, next) => {
 exports.deleteJob = async (req, res, next) => {
   try {
     const jobId = req.params.id;
-    const compId = req.user.comp_id; 
+    const compId = req.user.id; 
 
 
     const job = await Job.findById(jobId);

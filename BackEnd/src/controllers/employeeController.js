@@ -12,7 +12,7 @@ const addEmployee = async (req, res, next) => {
       return res.status(400).json({ error: 'All fields are required (name, role, number)' });
     }
 
-    const comp_id = req.user.comp_id;
+    const comp_id = req.user.id;
     const employeeId = await EmployeeModel.addEmployee({ emp_name, emp_role, emp_number, comp_id });
 
     res.status(201).json({
@@ -27,7 +27,7 @@ const addEmployee = async (req, res, next) => {
 const updateEmployee = async (req, res, next) => {
   try {
     const { currentPassword, ...updateData } = req.body; 
-    const compId = req.user.comp_id;
+    const compId = req.user.id;
 
     await verifyPassword(pool, "companies", "comp_id", compId, currentPassword);
 
@@ -54,7 +54,7 @@ const updateEmployee = async (req, res, next) => {
 const deleteEmployee = async (req, res, next) => {
   try {
     const { currentPassword } = req.body;
-    const compId = req.user.comp_id;
+    const compId = req.user.id;
 
     await verifyPassword(pool, "companies", "comp_id", compId, currentPassword);
 
@@ -79,7 +79,7 @@ const deleteEmployee = async (req, res, next) => {
 
 const getEmployees = async (req, res, next) => {
   try {
-    const compId = req.user.comp_id;
+    const compId = req.user.id;
     const employees = await EmployeeModel.getEmployeesByCompany(compId);
     res.json(employees);
   } catch (error) {
@@ -89,7 +89,7 @@ const getEmployees = async (req, res, next) => {
 
 const getEmployeeById = async (req, res, next) => {
   try {
-    const compId = req.user.comp_id;   
+    const compId = req.user.id;   
     const empId = req.params.id;      
 
     const employee = await EmployeeModel.findById(empId);

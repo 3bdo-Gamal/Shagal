@@ -32,7 +32,7 @@ exports.addExperience = async (req, res, next) => {
 
 exports.getExperiences = async (req, res, next) => {
   try {
-    const stu_id = req.user.stu_id;
+    const stu_id = req.user.id;
     const experiences = await experienceModel.getExperiencesByStudent(stu_id);
     res.json(experiences);
   } catch (err) {
@@ -44,7 +44,7 @@ exports.getExperiences = async (req, res, next) => {
 exports.updateExperience = async (req, res, next) => {
   try {
     
-    const id = req.user.stu_id;
+    const id = req.user.id;
     
     const exp_id = req.params.id;
     const updateData = req.body;
@@ -69,7 +69,7 @@ exports.updateExperience = async (req, res, next) => {
 exports.deleteExperience = async (req, res, next) => {
   try {
    
-    const id = req.user.stu_id;
+    const id = req.user.id;
     
     const exp_id = req.params.id;
    

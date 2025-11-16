@@ -7,7 +7,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 exports.getCompanyProfile = async (req, res, next) => {
   try {
     
-    const company = await userModel.findCompById(req.user.comp_id); 
+    const company = await userModel.findCompById(req.user.id); 
     if (!company) {
       return res.status(404).json({ error: "Company not found" });
     }
@@ -21,7 +21,7 @@ exports.updateCompany = async (req, res, next) => {
   try {
     
     
-    const id = req.user.comp_id;
+    const id = req.user.id;
     
 
     
@@ -40,7 +40,7 @@ exports.deleteCompany = async (req, res, next) => {
   try {
     
     
-    const id = req.user.comp_id;
+    const id = req.user.id;
     
 
     const success = await userModel.deleteComp(id);
@@ -59,7 +59,7 @@ exports.getStudentProfile = async (req, res, next) => {
   
   try {
     
-    const student = await userModel.findStuById(req.user.stu_id);
+    const student = await userModel.findStuById(req.user.id);
     if (!student) {
       return res.status(404).json({ error: "Student not found" });
     }
@@ -73,7 +73,7 @@ exports.updateStudent = async (req, res, next) => {
   try {
     
     
-    const id = req.user.stu_id;
+    const id = req.user.id;
     
 
     const success = await userModel.updateStudent(id, req.body);
@@ -91,7 +91,7 @@ exports.deleteStudent = async (req, res, next) => {
   try {
     
     
-    const id = req.user.stu_id;
+    const id = req.user.id;
     
 
     const success = await userModel.deleteStudent(id);
