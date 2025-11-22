@@ -31,7 +31,7 @@ exports.findAll = async (search = "") => {
 
 
 exports.getJobsByCompany = async (comp_id) => {
-  const sql = `SELECT * FROM comp_jobs WHERE comp_id = ?`;
+  const sql = `SELECT * FROM comp_jobs WHERE comp_id = ? and is_deleted = 0`;
   const [rows] = await db.execute(sql, [comp_id]);
   return rows;
 };

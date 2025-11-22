@@ -2,6 +2,7 @@ const Job = require('../models/jobModel');
 
 exports.createJob = async (req, res, next) => {
   try {
+    
     const { job_title, job_type, numberNeeded } = req.body;
 
     if (!job_title || !job_type || !numberNeeded) {
@@ -9,8 +10,8 @@ exports.createJob = async (req, res, next) => {
     }
 
     const compId = req.user.id;
-
-    const jobId = await Job.create(job_title, job_type, numberNeeded, compId);
+  const jobData = { job_title, job_type, numberNeeded, comp_id: compId };
+    const jobId = await Job.addJob(jobData);
 
     res.status(201).json({
       message: 'Job created successfully',
@@ -31,6 +32,16 @@ exports.getJobs = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+exports.getJobsBycompany = async (req, res, next) => {
+  try {
+    const compId = req.user.id;
+    const jobs = await Job.getJobsByCompany(compId);
+    res.json(jobs);
+  } catch (err) {
+    next(err);
+  } 
 };
 
   exports.updateJob = async (req, res, next) => {
@@ -79,10 +90,23 @@ exports.deleteJob = async (req, res, next) => {
       return res.status(403).json({ error: 'Not authorized to delete this job' });
     }
 
-    await Job.delete(jobId);
+    await Job.deleteJob(jobId);
     res.json({ message: 'Job deleted successfully' });
   } catch (err) {
     next(err);
   }
 };
 
+exports.getJobById = async (req, res, next) => {
+  try {
+    const jobId = req.params.id;
+    const job = await Job.findById(jobId);
+
+    if (!job) {
+      return res.status(404).json({ error: 'Job not found' });
+    }   
+    res.json(job);
+  } catch (err) {
+    next(err);
+  }
+};
