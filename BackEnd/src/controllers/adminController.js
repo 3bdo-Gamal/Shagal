@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel");
-
+const Job = require('../models/jobModel');
+const stuexp = require('../models/studentExperienceModel');
 
 // Comp Admin
 exports.addCompany = async (req, res, next) => {
@@ -19,6 +20,16 @@ exports.getCompanyById = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+exports.getJobsByCompany = async (req, res, next) => {   //here we are sending company id by params not body
+  try {
+    const jobs = await Job.getJobsByCompany(req.params.id);
+    if(!jobs) return res.status(404).json({ error: "No jobs found for this company" });
+    res.json(jobs);
+  } catch (err) {
+    next(err);
+  } 
 };
 
 
@@ -100,4 +111,14 @@ exports.deleteStudent = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+exports.getexpbyStudentId = async (req, res, next) => {
+  try {
+    const experiences = await stuexp.getExperiencesByStudent(req.params.id);
+    if (!experiences) return res.status(404).json({ error: "No experiences found for this student" });
+    res.json(experiences);
+  } catch (err) {
+    next(err);
+  } 
 };

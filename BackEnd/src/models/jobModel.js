@@ -37,6 +37,8 @@ exports.getJobsByCompany = async (comp_id) => {
 };
 
 
+
+
 exports.findById = async (job_id) => {
   const sql = `SELECT * FROM comp_jobs WHERE job_id = ? LIMIT 1`;
   const [rows] = await db.execute(sql, [job_id]);
