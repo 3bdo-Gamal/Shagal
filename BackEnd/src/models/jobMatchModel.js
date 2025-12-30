@@ -15,20 +15,18 @@ exports.getMatches = async () => {
   const sql = `
     SELECT 
       jm.job_match_id,
-      jm.matched_at,
       s.stu_name,
       s.email AS stu_email,
       c.comp_name,
       c.email AS comp_email,
       j.job_title,
-      a.admin_name
+      a.ad_name
     FROM job_match jm
     JOIN student s ON jm.stu_id = s.stu_id
     JOIN comp_jobs j ON jm.job_id = j.job_id
     JOIN companies c ON j.comp_id = c.comp_id
     JOIN admin a ON jm.admin_id = a.admin_id
     WHERE jm.is_deleted = 0
-    ORDER BY jm.matched_at DESC
   `;
   const [rows] = await db.execute(sql);
   return rows;

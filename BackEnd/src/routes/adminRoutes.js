@@ -24,10 +24,10 @@ router.delete("/stu/:id", auth(["stu"]), userAdminController.deleteStudent);
 router.get("/stuexp/:id", auth(["stu"]), adminController.getexpbyStudentId);
 
 // Job Matches CRUD
-router.post("/job-match", auth(["admin" ,"high"]), jobMatchController.createMatch);
-router.get("/job-match", auth("admin" ,["high"]), jobMatchController.getMatches);
-router.put("/job-match", auth("admin" ,["high"]), jobMatchController.updateMatch);
-router.delete("/job-match/:job_match_id", auth("admin" ,["high"]), jobMatchController.deleteMatch);
+router.post("/job-match", auth(["high"]), jobMatchController.createMatch);
+router.get("/job-match", auth(["high"]), jobMatchController.getMatches);
+router.put("/job-match", auth(["high"]), jobMatchController.updateMatch);
+router.delete("/job-match/:job_match_id", auth(["high"]), jobMatchController.deleteMatch);
 
 
 
